@@ -23,7 +23,15 @@ function MiniScreen({project,index}:{project:Project,index:number}) {
 export default function Home(){
  const [active,setActive]=useState("All projects"),[query,setQuery]=useState(""),[selected,setSelected]=useState<Project|null>(null),[screen,setScreen]=useState(0);
  const filtered=useMemo(()=>projects.filter(p=>(active==="All projects"||p.category===active)&&[p.name,p.description,p.category,...p.stack].join(" ").toLowerCase().includes(query.toLowerCase())),[active,query]);
- useEffect(()=>{\n  if(!selected)return;\n  const previous=document.body.style.overflow;\n  document.body.style.overflow="hidden";\n  const onKey=(event:KeyboardEvent)=>{if(event.key==="Escape"){stop();setSelected(null)}if(event.key==="ArrowRight")setScreen(s=>(s+1)%30);if(event.key==="ArrowLeft")setScreen(s=>(s+29)%30)};\n  window.addEventListener("keydown",onKey);\n  return ()=>{document.body.style.overflow=previous;window.removeEventListener("keydown",onKey)};\n },[selected]);\n const speak=(p:Project)=>{if(typeof window==="undefined"||!("speechSynthesis" in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(p.narration);u.rate=.94;u.pitch=1;window.speechSynthesis.speak(u)};
+ useEffect(()=>{
+  if(!selected)return;
+  const previous=document.body.style.overflow;
+  document.body.style.overflow="hidden";
+  const onKey=(event:KeyboardEvent)=>{if(event.key==="Escape"){stop();setSelected(null)}if(event.key==="ArrowRight")setScreen(s=>(s+1)%30);if(event.key==="ArrowLeft")setScreen(s=>(s+29)%30)};
+  window.addEventListener("keydown",onKey);
+  return ()=>{document.body.style.overflow=previous;window.removeEventListener("keydown",onKey)};
+ },[selected]);
+ const speak=(p:Project)=>{if(typeof window==="undefined"||!("speechSynthesis" in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(p.narration);u.rate=.94;u.pitch=1;window.speechSynthesis.speak(u)};
  const stop=()=>{if(typeof window!=="undefined"&&"speechSynthesis"in window)window.speechSynthesis.cancel()};
  return <main>
   <nav className="nav"><a className="logo" href="#"><span className="logo-mark">S</span> studioshelf<span className="logo-dot">.</span></a><div className="navlinks"><a href="#work">Projects</a><a href="#about">How it works</a><a href="#contact">Contact</a></div><a className="nav-cta" href="#work">Explore work <span>↗</span></a></nav>

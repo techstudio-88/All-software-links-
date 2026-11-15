@@ -20,11 +20,13 @@ export default function MotionEffects() {
       document.querySelectorAll(selector).forEach((element) => targets.add(element));
     });
 
-    targets.forEach((element, index) => {
+    let revealIndex = 0;
+    targets.forEach((element) => {
       element.setAttribute("data-reveal", "");
       const parent = element.parentElement;
       if (parent && (parent.classList.contains("project-grid") || parent.classList.contains("live-project-grid") || parent.classList.contains("trust-grid"))) {
-        (element as HTMLElement).style.setProperty("--reveal-delay", `${(index % 6) * 75}ms`);
+        (element as HTMLElement).style.setProperty("--reveal-delay", `${(revealIndex % 6) * 75}ms`);
+        revealIndex += 1;
       }
     });
 
